@@ -1,7 +1,7 @@
 ---
 layout: default
 ---
-{% include /_includes/header.html %}
+{% include_relative _includes/header.html %}
 
 <p align="Center">Hi I'm Phil Jensen.
 <p align="Center">
@@ -9,4 +9,4 @@ layout: default
 You can see my work history on <a href="https://www.linkedin.com/in/philjensen01">LinkedIn</a>.
 <p align="Center">
 
-{% include /_includes/footer.html %}
+{% include_relative _includes/footer.html %}
