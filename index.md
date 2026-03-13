@@ -1,6 +1,3 @@
----
-layout: default
----
 {% include header.html %}
 
 <p align="Center">Hi I'm Phil Jensen.
