@@ -1,0 +1,205 @@
+<title>Weight and Rep Calculator</title>
+<meta name="description" content="Weight and rep calculator based on Brzycki, Epley and Lander equations">
+<meta name="keywords" content="Epley formula, Epley equation, Brzycki formula, Brzycki equation, Lander formula, Lander equation, weightlifting, bodybuilding, hardgainer, strength training, powerlifting, HIT, nutrition, supplements, bodybuilding articles, powerlifting articles, strength training articles, nutrition, high intensity training, power, strength, fitness, health">
+</head>
+
+
+<font face="Arial">
+
+
+<p>
+This calculator below will predict the maximum amount of weight you can use for a specified number of reps if you know how many reps you can do with a given weight now (your nRM).  It also predicts the number of reps you can perform with another weight.  It is based on manipulations of the Brzycki, Epley and Lander Equations. Keep in mind that these calculations are not typically accurate for rep counts of higher than 10 to 12. For more information on what these estimates mean, and how they should be used, please see this <a href="coefficients">article</a> <u>Coefficients And Formulas That Predict Your 1 Rep Maximum</u>.</p>
+
+<br>
+
+<form method="post">
+<table align="center" border="3" width="600">
+<tbody>
+<tr>
+<td>
+<center>
+<font color="red" face="ARIAL">
+<b>Known Performance</b></font><br>
+nRM Weight: <input maxlength="5" name="nweight" size="5">  &nbsp;&nbsp; Reps (n): <input maxlength="5" name="nreps" size="5"><br><br><br>
+
+<font color="red" face="ARIAL">
+<b>Desired Performance</b></font><br>
+# of reps you wish to perform: <input maxlength="5" name="reps" size="5" value="1"><br>
+OR<br>
+Weight you wish to use: <input maxlength="5" name="weight" size="5"><br>
+<br><br>
+
+<input name="Button" type="reset" value="Reset">
+<input name="Button" onclick="Calculate(this.form)" type="button" value="Calculate"> 
+</font>
+</center>
+</td>
+
+<td>
+<center>
+<font color="red" face="ARIAL">
+<br>
+<b>Predictions</b></font></center>
+
+<strong>Epley Equation</strong><br><center>
+&nbsp;&nbsp;&nbsp; Max. weight you can use: <input maxlength="5" name="eweight" size="5"><br>
+Max. reps you can perform: <input maxlength="5" name="ereps" size="5"><br></center>
+<br>
+<strong>Lander Equation</strong><br><center>
+&nbsp;&nbsp;&nbsp; Max. weight you can use: <input maxlength="5" name="lweight" size="5"><br>
+Max. reps you can perform: <input maxlength="5" name="lreps" size="5"></center></br>
+<strong>Brzycki Equation</strong><br><center>
+&nbsp;&nbsp;&nbsp; Max. weight you can use: <input maxlength="5" name="bweight" size="5"><br>
+Max. reps you can perform: <input maxlength="5" name="breps" size="5"><br></center>
+<br>
+</font>
+</center>
+</td>
+</tr>
+</tbody>
+</table>
+</form>
+
+<hr>
+<br>
+
+
+<script language="JavaScript">
+<!--
+
+var bmax = 0;
+var emax = 0;
+var tempweight = 0;
+
+function Calculate(form){
+     if(form.nweight.value < 0){
+         alert("Error - Your nRM cannot be a negative number!");
+         return;
+     }
+     if(form.nreps.value < 0){
+         alert("Error - You cannot perform a negative number of reps!");
+         return;
+     }
+     if(!form.nweight.value || !form.nreps.value){
+         alert("Incomplete Input - Fill in both nRM Weight and Reps (n)!");
+         return;
+     }
+     if(form.weight.value && form.reps.value){
+         alert("Error - You must enter either the # of reps you wish to perform OR the weight you wish to use. Not Both!");
+         return;
+     }
+
+     if(!form.reps.value){
+         if( (form.weight.value/form.nweight.value) <= 0.70){
+             alert("Error - The weight you wish to use is too low to produce meaningful calculations.");
+         return;
+         }
+         if( (form.weight.value/form.nweight.value) >= 1.45){
+             alert("Error - The weight you wish to use is too high to produce meaningful calculations.");
+         return;
+         }
+     }
+
+     bmax = form.nweight.value / (1.0278 - (0.0278 * form.nreps.value));
+     emax = (form.nweight.value * form.nreps.value* 0.033) + eval(form.nweight.value);
+     lmax = form.nweight.value / (1.013 - (0.0267123 * form.nreps.value));
+
+     if(form.reps.value){
+         var bx = ( 1.0278 - (0.0278*form.reps.value) )*bmax;
+         var bround = Math.round(bx);
+         if(bround < bx){
+             var by = bx - bround;
+             var bweight = bround + Math.abs(Math.round(10*by))/10;
+             form.bweight.value = bweight;
+             }
+         if(bround >= bx){
+             var by = bround - bx;
+             var bweight = bround - Math.abs(Math.round(10*by))/10;
+             form.bweight.value = bweight;
+             }
+         form.breps.value = "";
+
+         tempweight = ( (emax*emax) / (0.066*form.reps.value + 0.001089*form.reps.value*form.reps.value + 1) );
+         var ex = Math.sqrt(tempweight);
+         var eround = Math.round(ex);
+         if(eround < ex){
+             var ey = ex - eround;
+             var eweight = eround + Math.abs(Math.round(10*ey))/10;
+             form.eweight.value = eweight;
+             }
+         if(eround >= ex){
+             var ey = eround - ex;
+             var eweight = eround - Math.abs(Math.round(10*ey))/10;
+             form.eweight.value = eweight;
+             }
+         form.ereps.value = "";
+
+         var lx = ( 1.013 - (0.0267123*form.reps.value) )*lmax;
+         var lround = Math.round(lx);
+         if(lround < lx){
+             var ly = lx - lround;
+             var lweight = lround + Math.abs(Math.round(10*ly))/10;
+             form.lweight.value = lweight;
+             }
+         if(lround >= lx){
+             var ly = lround - lx;
+             var lweight = lround - Math.abs(Math.round(10*ly))/10;
+             form.lweight.value = lweight;
+             }
+         form.lreps.value = "";
+
+         return;
+     }
+     if(form.weight.value){
+         var bx = ( 1.0278 - (form.weight.value/bmax) ) / 0.0278;
+         var bround = Math.round(bx);
+         if(bround < bx){
+             var by = bx - bround;
+             var breps = bround + Math.abs(Math.round(10*by))/10;
+             form.breps.value = breps;
+             }
+         if(bround >= bx){
+             var by = bround - bx;
+             var breps = bround - Math.abs(Math.round(10*by))/10;
+             form.breps.value = breps;
+             }
+         form.bweight.value = "";
+
+         var ex = (emax - form.weight.value) / ( form.weight.value * 0.033);
+         var eround = Math.round(ex);
+         if(eround < ex){
+             var ey = ex - eround;
+             var ereps = eround + Math.abs(Math.round(10*ey))/10;
+             form.ereps.value = ereps;
+             }
+         if(eround >= ex){
+             var ey = eround - ex;
+             var ereps = eround - Math.abs(Math.round(10*ey))/10;
+             form.ereps.value = ereps;
+             }
+         form.eweight.value = "";
+
+         var lx = ( 1.013 - (form.weight.value/lmax) ) / 0.0267123;
+         var lround = Math.round(lx);
+         if(lround < lx){
+             var ly = lx - lround;
+             var lreps = lround + Math.abs(Math.round(10*ly))/10;
+             form.lreps.value = lreps;
+             }
+         if(lround >= lx){
+             var ly = lround - lx;
+             var lreps = lround - Math.abs(Math.round(10*ly))/10;
+             form.lreps.value = lreps;
+             }
+         form.lweight.value = "";
+
+         return;
+     }
+
+}
+// -->
+</script>
+
+</font>
+
+</body>
